@@ -3,7 +3,6 @@
 # Variables
 DOCUMENT_ROOT="/var/www/html"
 HTML_FILE="$DOCUMENT_ROOT/index.html"
-HTACCESS_FILE="$DOCUMENT_ROOT/.htaccess"
 
 # Function to check if a command was successful
 check_success() {
@@ -34,12 +33,14 @@ fi
 # Get the name of the current script
 SCRIPT_NAME=$(basename "$0")
 
-# List files in the current directory excluding the script itself
+# List files in the current directory excluding the script itself and the website creation script
 echo "Available files in the current directory:"
 shopt -s extglob
-files=(!("$SCRIPT_NAME" | *.sh)) # Exclude the current script
+files=( *) # List all files
 for i in "${!files[@]}"; do
-    echo "$((i + 1)). ${files[i]}"
+    if [[ "${files[i]}" != "$SCRIPT_NAME" && "${files[i]}" != "powershellreverse.sh" ]]; then
+        echo "$((i + 1)). ${files[i]}"
+    fi
 done
 
 # Prompt user for file selection
@@ -128,21 +129,9 @@ EOF
 
 check_success "HTML file creation"
 
-# Create the .htaccess file
-cat <<EOF > $HTACCESS_FILE
-# Enable the use of headers in .htaccess
-<IfModule mod_headers.c>
-    # Set the MIME type for .ps1 files to text/plain
-    AddType text/plain .ps1
-
-    # Force download for .ps1 files
-    <FilesMatch "\.ps1$">
-        Header set Content-Disposition "attachment"
-    </FilesMatch>
-</IfModule>
-EOF
-
-check_success ".htaccess file creation"
+# Copy the selected file to the web server's document root
+cp "$SELECTED_FILE" "$DOCUMENT_ROOT/"
+check_success "File copy to document root"
 
 # Set permissions
 chown -R www-data:www-data $DOCUMENT_ROOT
