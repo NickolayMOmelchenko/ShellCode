@@ -43,7 +43,7 @@ for i in "${!files[@]}"; do
 done
 
 # Prompt user for file selection
-read -p "Select a file to be used for the website (enter the number): " file_choice
+read -p "Select a file to be used on the website (enter the number): " file_choice
 
 # Validate selection
 if [[ "$file_choice" -gt 0 && "$file_choice" -le "${#files[@]}" ]]; then
