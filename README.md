@@ -1,21 +1,19 @@
 # ShellCode
 
-**Reverse, Bind, HoaxShell, MSFVenom Shell Generator**
-link: https://www.revshells.com
+### Shell Generator Resources(Reverse, Bind, HoaxShell, MSFVenom)
+[Shell Generator](https://www.revshells.com)
 
-**Browser extensions**
-Hack-Tools
-https://chromewebstore.google.com/detail/hack-tools/cmbndhnoonmghfofefkcccljbkdpamhi
+### Browser Extensions
+[Hack-Tools Chrome Extension](https://chromewebstore.google.com/detail/hack-tools/cmbndhnoonmghfofefkcccljbkdpamhi)
 
-**Spin up a webserver**
-run my script on in the linux terminal
-git clone <>
-bash 
+### Spin Up a local Web Server on Linux
+To set up a web server and host your script, follow these steps:
 
-touch powershellreverse.ps1
-echo "commands" > powershellreverse.ps1
-sudo cp powershellscript.ps1 /var/www/html/
-sudo systemctl restart apache2.service
+Create a PowerShell script:
+   ```bash
+   touch powershellreverse.ps1
+   echo "<ShellCode here>" > powershellreverse.ps1
+   wget https://github.com/NickolayMOmelchenko/ShellCode/raw/refs/heads/main/setup_windows_website.sh
+   chmod +x setup_windows_website.sh
+   sudo ./setup_windows_website.sh
 
-
-Victim will need to hit the following address: http://192.168.50.53/
