@@ -25,7 +25,7 @@
 [git](https://github.com/moonD4rk/HackBrowserData.git) (Last tested 11/24)
 
 ---
-### Spin up a local Web Server to distribute the files(Last tested 11/24)
+### Spin up a local Web Server to distribute the shellcode(Last tested 11/24)
 To set up a web server and host your script, follow these steps:
 
    ```bash
