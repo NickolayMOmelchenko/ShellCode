@@ -34,4 +34,5 @@ To set up a web server and host your script, follow these steps:
    wget https://github.com/NickolayMOmelchenko/ShellCode/raw/refs/heads/main/setup_windows_website.sh
    chmod +x setup_windows_website.sh
    sudo ./setup_windows_website.sh
-
+   ```
+![My Image](./picture.png)
